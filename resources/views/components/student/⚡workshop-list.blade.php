@@ -29,6 +29,11 @@ new class extends Component
             return redirect()->route('login');
         }
 
+        if (count($this->userRegistrations) >= 3) {
+            session()->flash('error', 'You can only register for a maximum of 3 workshops.');
+            return;
+        }
+
         $workshop = Workshop::withCount('registrations')->findOrFail($workshopId);
 
         if (in_array($workshopId, $this->userRegistrations)) {
@@ -63,8 +68,13 @@ new class extends Component
 };
 ?>
 
-<div>
-    <h2 class="text-xl font-semibold mb-6 dark:text-gray-100">Available Workshops</h2>
+<div wire:poll.5s="loadData">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-semibold dark:text-gray-100">Available Workshops</h2>
+        <span class="text-sm font-medium px-3 py-1 rounded {{ count($this->userRegistrations) >= 3 ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' }}">
+            My Registrations: {{ count($this->userRegistrations) }} / 3
+        </span>
+    </div>
 
     @if (session()->has('success'))
         <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
@@ -112,9 +122,15 @@ new class extends Component
                             Workshop Full
                         </button>
                     @else
-                        <button wire:click="register({{ $workshop->id }})" class="w-full px-4 py-2 bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 rounded-md text-sm font-medium transition-colors">
-                            Register Now
-                        </button>
+                        @if(count($this->userRegistrations) >= 3)
+                            <button disabled class="w-full px-4 py-2 bg-gray-100 text-gray-400 dark:bg-zinc-800 dark:text-gray-500 rounded-md text-sm font-medium cursor-not-allowed">
+                                Registration Limit Reached (3/3)
+                            </button>
+                        @else
+                            <button wire:click="register({{ $workshop->id }})" class="w-full px-4 py-2 bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 rounded-md text-sm font-medium transition-colors">
+                                Register Now
+                            </button>
+                        @endif
                     @endif
                 </div>
             </div>
