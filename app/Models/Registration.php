@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Registration extends Model
 {
     protected $fillable = [
-        'workshop_id',
         'user_id',
+        'event_id',
     ];
 
     public function user()
@@ -16,8 +16,8 @@ class Registration extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function workshop()
+    public function event()
     {
-        return $this->belongsTo(Workshop::class);
+        return $this->belongsTo(Event::class);
     }
 }

@@ -3,14 +3,10 @@
     @if(auth()->user()->isAdmin())
         <div class="space-y-8">
             <livewire:admin.dashboard />
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                <livewire:admin.workshop-manager />
-                <livewire:admin.registration-list />
-            </div>
         </div>
     @else
         <div class="space-y-8">
-            <livewire:student.workshop-list />
+            <livewire:student.event-list />
         </div>
     @endif
     </div>

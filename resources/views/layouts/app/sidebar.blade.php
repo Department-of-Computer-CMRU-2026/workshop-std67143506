@@ -15,6 +15,15 @@
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
+                    
+                    @if(auth()->user()->isAdmin())
+                    <flux:sidebar.item icon="calendar" :href="route('admin.events')" :current="request()->routeIs('admin.events')" wire:navigate>
+                        {{ __('Manage Events') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>
+                        {{ __('Manage Users') }}
+                    </flux:sidebar.item>
+                    @endif
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
@@ -91,5 +100,54 @@
         {{ $slot }}
 
         @fluxScripts
+        <script>
+            // Helper to get data from Livewire detail (can be array or object)
+            const getDetailData = (detail) => {
+                if (Array.isArray(detail)) return detail[0];
+                return detail;
+            };
+
+            window.addEventListener('swal:success', event => {
+                const data = getDetailData(event.detail);
+                if (!data) return;
+
+                Swal.fire({
+                    title: data.title || 'Success!',
+                    text: data.text || '',
+                    icon: data.icon || 'success',
+                    timer: data.timer || 2000,
+                    showConfirmButton: false,
+                    position: 'center'
+                });
+            });
+
+            window.addEventListener('swal:confirm', event => {
+                const data = getDetailData(event.detail);
+                if (!data) return;
+
+                Swal.fire({
+                    title: data.title || 'Are you sure?',
+                    text: data.text || '',
+                    icon: data.icon || 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#2563eb', // blue-600
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: data.confirmButtonText || 'Yes, proceed!',
+                    cancelButtonText: data.cancelButtonText || 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            if (window.Livewire) {
+                                window.Livewire.dispatch(data.action, { id: data.id });
+                            } else {
+                                console.error('Livewire not found');
+                            }
+                        } catch (e) {
+                            console.error('Error dispatching to Livewire:', e);
+                        }
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
