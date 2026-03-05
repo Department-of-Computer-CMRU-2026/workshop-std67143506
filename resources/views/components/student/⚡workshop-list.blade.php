@@ -46,10 +46,16 @@ new class extends Component
             return;
         }
 
-        Registration::create([
-            'user_id' => Auth::id(),
-            'workshop_id' => $workshopId,
-        ]);
+        try {
+            Registration::create([
+                'user_id' => Auth::id(),
+                'workshop_id' => $workshopId,
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            // DB unique constraint triggered, meaning they are already registered.
+            session()->flash('error', 'You are already registered for this workshop.');
+            return;
+        }
 
         session()->flash('success', 'Successfully registered for ' . $workshop->title . '!');
         $this->loadData();
@@ -101,7 +107,7 @@ new class extends Component
                         @if($isRegistered)
                             <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Registered</span>
                         @elseif($isFull)
-                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Full</span>
+                            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Closed</span>
                         @endif
                     </div>
                     <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{{ $workshop->description }}</p>
@@ -119,7 +125,7 @@ new class extends Component
                         </button>
                     @elseif($isFull)
                         <button disabled class="w-full px-4 py-2 bg-gray-100 text-gray-400 dark:bg-zinc-800 dark:text-gray-500 rounded-md text-sm font-medium cursor-not-allowed">
-                            Workshop Full
+                            Closed
                         </button>
                     @else
                         @if(count($this->userRegistrations) >= 3)
