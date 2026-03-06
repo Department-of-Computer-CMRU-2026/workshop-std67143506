@@ -61,6 +61,69 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
-/* \[:where(&)\]:size-4 {
+/* [:\where(&)\]:size-4 {
     @apply size-4;
 } */
+
+/* --- Soft Pink Glassmorphism Theme --- */
+
+.bg-soft-pink-gradient {
+    background: linear-gradient(
+        270deg,
+        #ffd1dc, /* pastel pink */
+        #ffb6c1, /* light pink */
+        #e6e6fa, /* lavender */
+        #ffb6c1
+    );
+    background-size: 600% 600%;
+    animation: bgMove 18s ease infinite;
+    min-height: 100vh;
+}
+
+@keyframes bgMove {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+}
+
+.soft-blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.5;
+    z-index: -1;
+    animation: floatSoft 25s infinite alternate ease-in-out;
+}
+
+.soft-blob-1 {
+    background: #ffc0cb; /* pink */
+    top: -100px;
+    left: -100px;
+}
+
+.soft-blob-2 {
+    background: #dda0dd; /* plum/light purple */
+    bottom: -150px;
+    right: -100px;
+    animation-delay: -10s;
+}
+
+@keyframes floatSoft {
+    from { transform: translate(0, 0) scale(1) }
+    to { transform: translate(150px, 100px) scale(1.3) }
+}
+
+/* Glass panel utility */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05) !important;
+}
+
+.glass-panel-darker {
+    background: rgba(255, 255, 255, 0.55) !important;
+}

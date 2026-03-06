@@ -1,100 +1,199 @@
-    <div class="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-zinc-700">
-        <div>
-            <flux:heading size="xl" level="1">Manage Events</flux:heading>
-            <flux:subheading>Create and manage your workshop events</flux:subheading>
+<div class="space-y-10">
+    {{-- Summary Statistics Cards --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        {{-- Total Users --}}
+        <div class="glass-panel p-5 flex items-center gap-4 transition-all hover:-translate-y-1">
+            <div class="p-3 rounded-xl bg-blue-100/50">
+                <flux:icon name="users" class="size-6 text-blue-600" />
+            </div>
+            <div>
+                <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Total Users</p>
+                <p class="text-xl font-black text-zinc-800">{{ $stats['totalUsers'] }}</p>
+            </div>
         </div>
-        <flux:button variant="primary" wire:click="openCreate" icon="plus">
-            Add Event
+
+        {{-- Total Events --}}
+        <div class="glass-panel p-5 flex items-center gap-4 transition-all hover:-translate-y-1">
+            <div class="p-3 rounded-xl bg-purple-100/50">
+                <flux:icon name="calendar" class="size-6 text-purple-600" />
+            </div>
+            <div>
+                <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Total Events</p>
+                <p class="text-xl font-black text-zinc-800">{{ $stats['totalEvents'] }}</p>
+            </div>
+        </div>
+
+        {{-- Total Registrations --}}
+        <div class="glass-panel p-5 flex items-center gap-4 transition-all hover:-translate-y-1">
+            <div class="p-3 rounded-xl bg-green-100/50">
+                <flux:icon name="clipboard-document-check" class="size-6 text-green-600" />
+            </div>
+            <div>
+                <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Registrations</p>
+                <p class="text-xl font-black text-zinc-800">{{ $stats['totalRegistrations'] }}</p>
+            </div>
+        </div>
+
+        {{-- Full Events --}}
+        <div class="glass-panel p-5 flex items-center gap-4 transition-all hover:-translate-y-1">
+            <div class="p-3 rounded-xl bg-red-100/50">
+                <flux:icon name="no-symbol" class="size-6 text-red-600" />
+            </div>
+            <div>
+                <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Full Events</p>
+                <p class="text-xl font-black text-zinc-800">{{ $stats['fullEvents'] }}</p>
+            </div>
+        </div>
+
+        {{-- Available Seats --}}
+        <div class="glass-panel p-5 flex items-center gap-4 transition-all hover:-translate-y-1">
+            <div class="p-3 rounded-xl bg-cyan-100/50">
+                <flux:icon name="ticket" class="size-6 text-cyan-600" />
+            </div>
+            <div>
+                <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-black">Seats Left</p>
+                <p class="text-xl font-black text-zinc-800">{{ $stats['availableSeats'] }}</p>
+            </div>
+        </div>
+    </div>
+
+    {{-- Header Content --}}
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-black text-zinc-800 tracking-tight">Events Management</h1>
+            <p class="text-zinc-500 font-medium">Create and coordinate your modern workshop events</p>
+        </div>
+        <flux:button variant="primary" wire:click="openCreate" icon="plus" class="px-6 py-2.5 rounded-xl font-bold shadow-lg hover:shadow-pink-200 transition-all">
+            NEW EVENT
         </flux:button>
     </div>
 
-    <div class="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-sm">
-        <table class="w-full text-sm">
-            <thead class="border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800">
-                <tr>
-                    <th class="px-4 py-3 text-left font-semibold text-zinc-600 dark:text-zinc-300">#</th>
-                    <th class="px-4 py-3 text-left font-semibold text-zinc-600 dark:text-zinc-300">Title</th>
-                    <th class="px-4 py-3 text-left font-semibold text-zinc-600 dark:text-zinc-300">Speaker</th>
-                    <th class="px-4 py-3 text-left font-semibold text-zinc-600 dark:text-zinc-300">Location</th>
-                    <th class="px-4 py-3 text-center font-semibold text-zinc-600 dark:text-zinc-300">Seats</th>
-                    <th class="px-4 py-3 text-center font-semibold text-zinc-600 dark:text-zinc-300">Registered</th>
-                    <th class="px-4 py-3 text-center font-semibold text-zinc-600 dark:text-zinc-300">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-zinc-100 dark:divide-zinc-700">
-                @forelse($events as $event)
-                <tr class="hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">
-                    <td class="px-4 py-3 text-zinc-500">{{ $loop->iteration }}</td>
-                    <td class="px-4 py-3 font-medium text-zinc-800 dark:text-zinc-100">{{ $event->title }}</td>
-                    <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300">{{ $event->speaker }}</td>
-                    <td class="px-4 py-3 text-zinc-600 dark:text-zinc-300">{{ $event->location }}</td>
-                    <td class="px-4 py-3 text-center text-zinc-600 dark:text-zinc-300">{{ $event->total_seats }}</td>
-                    <td class="px-4 py-3 text-center">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                            {{ $event->registrations_count >= $event->total_seats ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' : 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' }}">
-                            {{ $event->registrations_count }} / {{ $event->total_seats }}
-                        </span>
-                    </td>
-                    <td class="px-4 py-3 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <flux:button size="sm" variant="ghost" icon="pencil" wire:click="openEdit({{ $event->id }})">
-                                Edit
-                            </flux:button>
-                            <flux:button size="sm" variant="danger" icon="trash" wire:click="deleteConfirm({{ $event->id }})">
-                                Delete
-                            </flux:button>
+    {{-- Premium Cards Grid --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        @forelse($events as $event)
+        <div class="glass-panel p-0 flex items-stretch overflow-hidden group hover:-translate-y-2 transition-all duration-500 hover:shadow-2xl hover:shadow-pink-100/50">
+            {{-- Card Body --}}
+            <div class="p-7 flex-1 flex flex-col items-start min-w-0">
+                {{-- Seats Left Badge --}}
+                <div class="mb-5">
+                    <span class="px-3 py-1 bg-green-50 text-green-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-green-100">
+                        {{ max(0, $event->total_seats - $event->registrations_count) }} SEATS LEFT
+                    </span>
+                </div>
+
+                {{-- Title --}}
+                <h4 class="text-xl font-black text-zinc-800 mb-6 line-clamp-2 leading-tight group-hover:text-pink-600 transition-colors">
+                    {{ $event->title }}
+                </h4>
+                
+                {{-- Icon rows --}}
+                <div class="space-y-4 w-full">
+                    <div class="flex items-center gap-3 text-zinc-600">
+                        <div class="p-1.5 rounded-lg bg-zinc-50/80">
+                            <flux:icon name="user" class="size-4 text-zinc-500" />
                         </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7" class="px-4 py-10 text-center text-zinc-400">No events found.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+                        <span class="text-sm font-bold truncate">{{ $event->speaker }}</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-3 text-zinc-600">
+                        <div class="p-1.5 rounded-lg bg-zinc-50/80">
+                            <flux:icon name="map-pin" class="size-4 text-zinc-500" />
+                        </div>
+                        <span class="text-sm font-bold truncate">{{ $event->location }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="p-1.5 rounded-lg bg-zinc-50/80">
+                            <flux:icon name="users" class="size-4 text-zinc-500" />
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-1">
+                            <div class="h-1.5 flex-1 bg-zinc-100 rounded-full overflow-hidden">
+                                @php $percent = $event->total_seats > 0 ? ($event->registrations_count / $event->total_seats) * 100 : 0; @endphp
+                                <div class="h-full bg-pink-500 transition-all duration-1000" style="width: {{ $percent }}%"></div>
+                            </div>
+                            <span class="text-xs font-black text-zinc-700 whitespace-nowrap">
+                                {{ $event->registrations_count }} / {{ $event->total_seats }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Action Sidebar --}}
+            <div class="w-16 bg-zinc-50/30 border-s border-zinc-100/50 flex flex-col justify-around py-4 items-center">
+                <button wire:click="openEdit({{ $event->id }})" class="p-2.5 rounded-xl text-indigo-500 hover:bg-indigo-50 transition-all group/action">
+                    <flux:icon name="eye" class="size-5 group-hover/action:scale-125 transition-transform" />
+                    <span class="text-[8px] font-black uppercase mt-1 block">VIEW</span>
+                </button>
+                <button wire:click="openEdit({{ $event->id }})" class="p-2.5 rounded-xl text-blue-500 hover:bg-blue-50 transition-all group/action">
+                    <flux:icon name="pencil-square" class="size-5 group-hover/action:scale-125 transition-transform" />
+                    <span class="text-[8px] font-black uppercase mt-1 block">EDIT</span>
+                </button>
+                <button wire:click="deleteConfirm({{ $event->id }})" class="p-2.5 rounded-xl text-red-500 hover:bg-red-50 transition-all group/action">
+                    <flux:icon name="trash" class="size-5 group-hover/action:scale-125 transition-transform" />
+                    <span class="text-[8px] font-black uppercase mt-1 block">DEL</span>
+                </button>
+            </div>
+        </div>
+        @empty
+        <div class="col-span-full py-20 text-center glass-panel">
+            <flux:icon name="calendar" class="size-12 mx-auto mb-4 text-zinc-300" />
+            <p class="text-zinc-500 font-bold uppercase tracking-widest">No events discovered yet</p>
+            <flux:button variant="ghost" class="mt-4" wire:click="openCreate">Create your first event</flux:button>
+        </div>
+        @endforelse
+    </div>
+
+    {{-- Pagination --}}
+    <div class="mt-8">
+        {{ $events->links() }}
     </div>
 
     {{-- Modal --}}
     @if($showModal)
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-        <div class="w-full max-w-lg rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 shadow-2xl p-6 space-y-5">
-            <div class="flex items-center justify-between">
-                <flux:heading size="lg">{{ $editingId ? 'Edit Event' : 'Create Event' }}</flux:heading>
-                <flux:button variant="ghost" icon="x-mark" wire:click="$set('showModal', false)" />
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/40 backdrop-blur-md animate-in fade-in duration-300">
+        <div class="w-full max-w-lg glass-panel p-0 overflow-hidden shadow-3xl animate-in zoom-in-95 duration-300">
+            <div class="bg-zinc-50/50 p-6 border-b border-zinc-200/50 flex items-center justify-between">
+                <h3 class="text-xl font-black text-zinc-800">{{ $editingId ? 'EDIT EVENT' : 'CREATE NEW EVENT' }}</h3>
+                <button wire:click="$set('showModal', false)" class="text-zinc-400 hover:text-zinc-600 transition-colors">
+                    <flux:icon name="x-mark" class="size-6" />
+                </button>
             </div>
 
-            <div class="space-y-4">
-                <flux:field>
-                    <flux:label>Title</flux:label>
-                    <flux:input wire:model="title" placeholder="Event title" />
-                    @error('title') <flux:error>{{ $message }}</flux:error> @enderror
-                </flux:field>
+            <div class="p-8 space-y-6">
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 block">Event Title</label>
+                    <input type="text" wire:model="title" class="w-full bg-white/50 border border-zinc-200 rounded-xl px-4 py-3 text-zinc-800 font-bold focus:ring-2 focus:ring-pink-500 focus:border-red-500 outline-none transition-all" placeholder="Enter session title...">
+                    @error('title') <span class="text-rose-500 text-xs mt-1 font-bold">{{ $message }}</span> @enderror
+                </div>
 
-                <flux:field>
-                    <flux:label>Speaker</flux:label>
-                    <flux:input wire:model="speaker" placeholder="Speaker name" />
-                    @error('speaker') <flux:error>{{ $message }}</flux:error> @enderror
-                </flux:field>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 block">Speaker</label>
+                        <input type="text" wire:model="speaker" class="w-full bg-white/50 border border-zinc-200 rounded-xl px-4 py-3 text-zinc-800 font-bold focus:ring-2 focus:ring-pink-500 focus:border-red-500 outline-none transition-all">
+                        @error('speaker') <span class="text-rose-500 text-xs mt-1 font-bold">{{ $message }}</span> @enderror
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 block">Venue / Room</label>
+                        <input type="text" wire:model="location" class="w-full bg-white/50 border border-zinc-200 rounded-xl px-4 py-3 text-zinc-800 font-bold focus:ring-2 focus:ring-pink-500 focus:border-red-500 outline-none transition-all">
+                        @error('location') <span class="text-rose-500 text-xs mt-1 font-bold">{{ $message }}</span> @enderror
+                    </div>
+                </div>
 
-                <flux:field>
-                    <flux:label>Location</flux:label>
-                    <flux:input wire:model="location" placeholder="Venue / Room" />
-                    @error('location') <flux:error>{{ $message }}</flux:error> @enderror
-                </flux:field>
-
-                <flux:field>
-                    <flux:label>Total Seats</flux:label>
-                    <flux:input type="number" wire:model="total_seats" min="1" />
-                    @error('total_seats') <flux:error>{{ $message }}</flux:error> @enderror
-                </flux:field>
+                <div>
+                    <label class="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-2 block">Total Capacity</label>
+                    <input type="number" wire:model="total_seats" class="w-full bg-white/50 border border-zinc-200 rounded-xl px-4 py-3 text-zinc-800 font-bold focus:ring-2 focus:ring-pink-500 focus:border-red-500 outline-none transition-all">
+                    @error('total_seats') <span class="text-rose-500 text-xs mt-1 font-bold">{{ $message }}</span> @enderror
+                </div>
             </div>
 
-            <div class="flex justify-end gap-2 pt-2">
-                <flux:button variant="ghost" wire:click="$set('showModal', false)">Cancel</flux:button>
-                <flux:button variant="primary" wire:click="save">
-                    {{ $editingId ? 'Update' : 'Create' }}
-                </flux:button>
+            <div class="p-8 bg-zinc-50/50 border-t border-zinc-200/50 flex justify-end gap-3">
+                <button wire:click="$set('showModal', false)" class="px-6 py-2.5 rounded-xl font-black text-[11px] text-zinc-500 hover:bg-zinc-200 transition-all">
+                    CANCEL
+                </button>
+                <button wire:click="save" class="px-8 py-2.5 bg-zinc-800 text-white rounded-xl font-black text-[11px] hover:bg-zinc-700 shadow-xl transition-all">
+                    {{ $editingId ? 'UPDATE EVENT' : 'SAVE EVENT' }}
+                </button>
             </div>
         </div>
     </div>
