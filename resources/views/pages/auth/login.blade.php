@@ -184,43 +184,34 @@ transform:scale(1.02);
 /* login button */
 
 .btn{
-
 width:100%;
-
 padding:18px;
-
 border:none;
-
 border-radius:18px;
-
-font-size:1.1rem;
-
+font-size:1rem;
 font-weight:800;
-
 color:white;
-
 cursor:pointer;
-
-background:linear-gradient(
-135deg,
-#ff9aa2,
-#ffb7b2,
-#c084fc
-);
-
-box-shadow:
-0 10px 30px rgba(255, 154, 162, 0.3);
-
 transition:.35s;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+}
+
+.btn-user{
+background:linear-gradient(135deg, #ff9aa2, #ffb7b2, #ff9aa2);
+box-shadow: 0 10px 30px rgba(255, 154, 162, 0.3);
+}
+
+.btn-admin{
+background:linear-gradient(135deg, #6366f1, #a855f7, #6366f1);
+box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
 }
 
 .btn:hover{
-
 transform:translateY(-4px);
-
-box-shadow:
-0 20px 40px rgba(255,0,150,.55);
-
+box-shadow: 0 15px 35px rgba(0,0,0,.2);
 }
 
 
@@ -359,9 +350,27 @@ Remember me
 </div>
 
 
-<button class="btn">
-Sign in
-</button>
+<div class="space-y-4">
+    <button type="submit" class="btn btn-user">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM12 14c-4 0-8 2-8 5v1h16v-1c0-3-4-5-8-5z"/>
+        </svg>
+        STUDENT SIGN IN
+    </button>
+
+    <div class="flex items-center gap-4 my-2">
+        <div class="h-[1px] flex-1 bg-zinc-200"></div>
+        <span class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">or access as</span>
+        <div class="h-[1px] flex-1 bg-zinc-200"></div>
+    </div>
+
+    <button type="submit" class="btn btn-admin">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.5 1.1 2.5 2.5S13.4 12 12 12s-2.5-1.1-2.5-2.5S10.6 7 12 7zm0 13c-2.3 0-4.4-1.1-5.7-2.9.1-1.1 2.8-1.9 5.7-1.9s5.6.8 5.7 1.9c-1.3 1.8-3.4 2.9-5.7 2.9z"/>
+        </svg>
+        ADMINISTRATOR LOGIN
+    </button>
+</div>
 
 </form>
 
